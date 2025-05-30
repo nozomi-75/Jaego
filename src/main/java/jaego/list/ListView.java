@@ -7,7 +7,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import jaego.utils.SampleItem;
@@ -27,12 +26,7 @@ public class ListView extends JPanel {
 
     private void initView() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createEtchedBorder(),
-            "Product List",
-            TitledBorder.LEADING,
-            TitledBorder.TOP
-        ));
+        setBorder(BorderFactory.createTitledBorder("Product List"));
 
         tableModel = new DefaultTableModel(COLUMN_NAMES, 0) {
             @Override
