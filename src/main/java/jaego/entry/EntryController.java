@@ -2,6 +2,7 @@ package jaego.entry;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
 
@@ -11,6 +12,7 @@ public class EntryController {
 
     private final EntryModel model;
     private final EntryView view;
+    private Consumer<SampleItem> onSaveListener;
 
     public EntryController(EntryModel model, EntryView view) {
         this.model = model;
@@ -48,7 +50,17 @@ public class EntryController {
 
         SampleItem item = new SampleItem(id, name, price, quantity, category);
         model.addItem(item);
+
+        // Notify listener if set
+        if (onSaveListener != null) {
+            onSaveListener.accept(item);
+        }
+
         JOptionPane.showMessageDialog(null, "Product saved successfully.");
         view.clearFields();
+    }
+
+    public void setOnSaveListener(Consumer<SampleItem> listener) {
+        this.onSaveListener = listener;
     }
 }

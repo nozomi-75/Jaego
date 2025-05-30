@@ -1,12 +1,13 @@
 package jaego.entry;
 
+import java.util.function.Consumer;
 import javax.swing.JPanel;
+import jaego.utils.SampleItem;
 
 public class EntryPanel {
 
     private final EntryModel model;
     private final EntryView view;
-    @SuppressWarnings("unused")
     private final EntryController controller;
 
     public EntryPanel() {
@@ -21,5 +22,9 @@ public class EntryPanel {
 
     public EntryModel getModel() {
         return model;
+    }
+
+    public void setOnSave(Consumer<SampleItem> listener) {
+        controller.setOnSaveListener(listener);
     }
 }
