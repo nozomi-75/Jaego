@@ -3,18 +3,23 @@ package jaego.core;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+
+import jaego.entry.EntryPanel;
 
 /**
  * AppFrame is the main app window that contains all components.
  * It initializes the GUI components and sets up the layout.
- * 
+ *
  * <p><strong>Usage:</strong></p>
- * <pre>new AppFrame("Window Title").showWindow()</pre>
+ * <pre>new AppFrame("Window Title").showWindow();</pre>
  */
 public class AppFrame extends JFrame {
-    private JLabel label;
+
+    private EntryPanel entryPanel;
 
     public AppFrame(String title) {
         super(title);
@@ -25,17 +30,27 @@ public class AppFrame extends JFrame {
 
     private void initFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(800,600));
+        setSize(new Dimension(800, 600));
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
     }
 
     private void initComponents() {
-        label = new JLabel("Lets check the stock.");
+        entryPanel = new EntryPanel();
     }
 
     private void layoutComponents() {
-        add(label, BorderLayout.CENTER);
+        JPanel leftPanel = entryPanel.getViewPanel();
+        JPanel rightPanel = new JPanel();
+
+        rightPanel.setBorder(BorderFactory.createTitledBorder("Product List"));
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
+        
+        splitPane.setResizeWeight(0);
+        splitPane.setDividerLocation(250);
+
+        add(splitPane, BorderLayout.CENTER);
     }
 
     public void showWindow() {
