@@ -49,7 +49,6 @@ public class EntryView extends JPanel {
 
     private void initEntryPanel() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder("Add New Product"));
     }
 
     private void initFormComponents() {

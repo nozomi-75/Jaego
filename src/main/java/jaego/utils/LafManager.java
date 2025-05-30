@@ -1,5 +1,10 @@
 package jaego.utils;
 
+import java.awt.Window;
+
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -43,5 +48,23 @@ public class LafManager {
         } catch (Exception fallbackException) {
             System.err.println("Fatal error: Could not initialize any Laf.");
         }
+    }
+
+    public static void toggleTheme(boolean darkMode, JToggleButton toggleButton, JToolBar toolbar) {
+        if (toggleButton != null) {
+            if (darkMode) {
+                applyDarkLaf();
+                toggleButton.setText("Light Mode");
+            } else {
+                applyLightLaf();
+                toggleButton.setText("Dark Mode");
+            }
+        }
+
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            for (Window window : Window.getWindows()) {
+                SwingUtilities.updateComponentTreeUI(window);
+            }
+        });
     }
 }

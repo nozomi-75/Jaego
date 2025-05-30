@@ -9,6 +9,7 @@ import javax.swing.JSplitPane;
 
 import jaego.entry.EntryPanel;
 import jaego.list.ListPanel;
+import jaego.toolbar.Toolbar;
 
 /**
  * AppFrame is the main app window that contains all components.
@@ -18,7 +19,7 @@ import jaego.list.ListPanel;
  * <pre>new AppFrame("Window Title").showWindow();</pre>
  */
 public class AppFrame extends JFrame {
-
+    private Toolbar toolbar;
     private EntryPanel entryPanel;
     private ListPanel listPanel;
 
@@ -38,6 +39,7 @@ public class AppFrame extends JFrame {
     }
 
     private void initComponents() {
+        toolbar = new Toolbar();
         entryPanel = new EntryPanel();
         listPanel = new ListPanel();
         entryPanel.setOnSave(listPanel::addItem);
@@ -55,7 +57,7 @@ public class AppFrame extends JFrame {
         
         splitPane.setResizeWeight(0);
         splitPane.setDividerLocation(250);
-
+        add(toolbar.getToolBar(), BorderLayout.NORTH);
         add(splitPane, BorderLayout.CENTER);
     }
 
