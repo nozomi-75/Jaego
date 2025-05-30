@@ -3,7 +3,6 @@ package jaego.utils;
 
 /**
  * SampleItem class is a Plain Old Java Object that represents an item.
- * It contains details often associated with an item.
  * 
  * @param itemID The ID/SKU of an item.
  * @param itemName The name of the item.

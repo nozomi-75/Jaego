@@ -2,6 +2,8 @@ package jaego.core;
 
 import javax.swing.SwingUtilities;
 
+import jaego.utils.LafManager;
+
 /**
  * This is the main entry point for the application.
  * It initializes the GUI and sets up the main app frame.
@@ -12,6 +14,7 @@ import javax.swing.SwingUtilities;
 public class MainApp {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            LafManager.applyLightLaf();
             new AppFrame("Jaego").showWindow();
         });
     }
