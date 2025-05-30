@@ -31,6 +31,7 @@ public class AppFrame extends JFrame {
     private void initFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(800, 600));
+        setMinimumSize(new Dimension(600, 450));
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
     }
