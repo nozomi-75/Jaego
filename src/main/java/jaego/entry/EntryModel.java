@@ -14,6 +14,11 @@ import javax.swing.SwingWorker;
 import jaego.utils.DialogUtils;
 import jaego.utils.SampleItem;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+
 /**
  * EntryModel serves as the shared data model that holds the list of {@link SampleItem}.
  * <p>
@@ -38,7 +43,7 @@ public class EntryModel {
      */
     public void addItem(SampleItem item) {
         items.add(item);
-        saveToFile(item);
+        saveToFile();
         notifyListeners();
     }
 
@@ -76,48 +81,55 @@ public class EntryModel {
      * </p>
      */
     private void loadFromFile() {
-        new SwingWorker<List<SampleItem>, Void>() {
+        if (!inventoryFile.exists()) return;
+
+        SwingWorker<List<SampleItem>, Void> worker = new SwingWorker<>() {
             @Override
             protected List<SampleItem> doInBackground() {
                 List<SampleItem> loadedItems = new ArrayList<>();
-                if (!inventoryFile.exists()) return loadedItems;
+                try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile));
+                     CSVParser parser = CSVFormat.DEFAULT
+                         .builder()
+                         .setHeader("Product ID", "Name", "Price", "Quantity", "Category")
+                         .setSkipHeaderRecord(true)
+                         .get()
+                         .parse(reader)) {
 
-                try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile))) {
-                    String line;
-                    boolean isHeader = true;
-                    while ((line = reader.readLine()) != null) {
-                        if (isHeader) {
-                            isHeader = false;
-                            continue; // Skip header line
+                    for (CSVRecord record : parser) {
+                        try {
+                            String id = record.get("Product ID").trim();
+                            String name = record.get("Name").trim();
+                            double price = Double.parseDouble(record.get("Price").trim());
+                            int qty = Integer.parseInt(record.get("Quantity").trim());
+                            String category = record.get("Category").trim();
+
+                            loadedItems.add(new SampleItem(id, name, price, qty, category));
+                        } catch (Exception e) {
+                            // skip malformed record
                         }
-                        String[] tokens = line.split(",", -1);
-                        if (tokens.length != 5) continue;
-                        SampleItem item = new SampleItem(
-                            tokens[0].trim(),
-                            tokens[1].trim(),
-                            Double.parseDouble(tokens[2].trim()),
-                            Integer.parseInt(tokens[3].trim()),
-                            tokens[4].trim()
-                        );
-                        loadedItems.add(item);
                     }
-                } catch (IOException | NumberFormatException e) {
+
+                } catch (IOException e) {
                     DialogUtils.showError("Failed to load inventory: " + e.getMessage(), "Loading failed");
                 }
+
                 return loadedItems;
             }
 
             @Override
             protected void done() {
                 try {
+                    List<SampleItem> parsedItems = get();
                     items.clear();
-                    items.addAll(get());
-                    notifyListeners(); // Update views after loading
+                    items.addAll(parsedItems);
+                    notifyListeners();
                 } catch (Exception e) {
                     DialogUtils.showError("Failed to finalize inventory loading.", "Error");
                 }
             }
-        }.execute();
+        };
+
+        worker.execute();
     }
 
     /**
@@ -126,27 +138,33 @@ public class EntryModel {
      * Each line is written in CSV format: {@code id,name,price,quantity,category}.
      * </p>
      */
-    private void saveToFile(SampleItem item) {
-        new SwingWorker<Void, Void>() {
+    private void saveToFile() {
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                boolean fileExisted = inventoryFile.exists();
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile, true))) {
-                    if (!fileExisted) {
-                        writer.write("ID,Name,Price,Quantity,Category\n");
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile, false));
+                     CSVPrinter printer = new CSVPrinter(writer,
+                         CSVFormat.Builder.create()
+                             .setHeader("Product ID", "Name", "Price", "Quantity", "Category")
+                             .get())) {
+                            
+                    for (SampleItem item : items) {
+                        printer.printRecord(
+                            item.getID(),
+                            item.getName(),
+                            item.getPrice(),
+                            item.getQty(),
+                            item.getCategory()
+                        );
                     }
-                    writer.write(String.format("%s,%s,%.2f,%d,%s%n",
-                        item.getID(),
-                        item.getName(),
-                        item.getPrice(),
-                        item.getQty(),
-                        item.getCategory()
-                    ));
+                
                 } catch (IOException e) {
                     DialogUtils.showError("Failed to save inventory: " + e.getMessage(), "Saving failed");
                 }
                 return null;
             }
-        }.execute();
+        };
+    
+        worker.execute();
     }
 }
