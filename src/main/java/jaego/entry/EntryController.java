@@ -4,8 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.function.Consumer;
 
-import javax.swing.JOptionPane;
-
+import jaego.utils.DialogUtils;
 import jaego.utils.SampleItem;
 
 public class EntryController {
@@ -44,7 +43,7 @@ public class EntryController {
         String category = view.getSelectedCategory();
 
         if (id.isEmpty() || name.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Product ID and Name cannot be empty.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+            DialogUtils.showError("Product ID and Name cannot be empty.", "Validation error");
             return;
         }
 
@@ -56,7 +55,7 @@ public class EntryController {
             onSaveListener.accept(item);
         }
 
-        JOptionPane.showMessageDialog(null, "Product saved successfully.");
+        DialogUtils.showInfo("Product saved successfully.", "Action successful");
         view.clearFields();
     }
 

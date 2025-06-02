@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jaego.utils.DialogUtils;
 import jaego.utils.SampleItem;
 
 public class EntryModel {
@@ -59,7 +60,7 @@ public class EntryModel {
                 items.add(item);
             }
         } catch (IOException | NumberFormatException e) {
-            System.err.println("Failed to load inventory: " + e.getMessage());
+            DialogUtils.showError("Failed to load inventory: " + e.getMessage(), "Loading failed");
         }
     }
 
@@ -75,7 +76,7 @@ public class EntryModel {
                 ));
             }
         } catch (IOException e) {
-            System.err.println("Failed to save inventory: " + e.getMessage());
+            DialogUtils.showError("Failed to save inventory: " + e.getMessage(), "Saving failed");
         }
     }
 }

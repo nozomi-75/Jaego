@@ -41,7 +41,6 @@ public class AppFrame extends JFrame {
 
     private void initComponents() {
         toolbar = new Toolbar();
-        
         EntryModel sharedModel = new EntryModel();
         entryPanel = new EntryPanel(sharedModel);
         listPanel = new ListPanel(sharedModel);
