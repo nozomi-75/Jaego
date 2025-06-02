@@ -10,7 +10,7 @@ public class EntryPanel {
     private final EntryView view;
     private final EntryController controller;
 
-    public EntryPanel() {
+    public EntryPanel(EntryModel model) {
         this.model = new EntryModel();
         this.view = new EntryView();
         this.controller = new EntryController(model, view);

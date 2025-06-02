@@ -1,24 +1,22 @@
 package jaego.list;
 
+import java.util.List;
+
+import jaego.entry.EntryModel;
 import jaego.utils.SampleItem;
 
 public class ListController {
 
-    private final ListModel model;
+    private final EntryModel model;
     private final ListView view;
 
-    public ListController(ListModel model, ListView view) {
+    public ListController(EntryModel model, ListView view) {
         this.model = model;
         this.view = view;
     }
 
-    public void addItem(SampleItem item) {
-        model.addItem(item);
-        view.updateTable(model.getItems());
-    }
-
-    public void clearList() {
-        model.clearItems();
-        view.clearTable();
+    public void refreshTable() {
+        List<SampleItem> items = model.getItems();
+        view.updateTable(items);
     }
 }

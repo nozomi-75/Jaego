@@ -2,28 +2,28 @@ package jaego.list;
 
 import javax.swing.JPanel;
 
-import jaego.utils.SampleItem;
+import jaego.entry.EntryModel;
 
 public class ListPanel {
-    private final ListModel model;
+    @SuppressWarnings("unused")
+    private final EntryModel entryModel;
     private final ListView view;
     private final ListController controller;
 
-    public ListPanel() {
-        this.model = new ListModel();
+    public ListPanel(EntryModel entryModel) {
+        this.entryModel = entryModel;
         this.view = new ListView();
-        this.controller = new ListController(model, view);
+        this.controller = new ListController(entryModel, view);
+
+        entryModel.addChangeListener(controller::refreshTable);
+        controller.refreshTable();
     }
 
     public JPanel getViewPanel() {
         return view;
     }
 
-    public void addItem(SampleItem item) {
-        controller.addItem(item);
-    }
-
-    public void clearAllItems() {
-        controller.clearList();
+    public void refresh() {
+        controller.refreshTable();
     }
 }

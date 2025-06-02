@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import jaego.entry.EntryModel;
 import jaego.entry.EntryPanel;
 import jaego.list.ListPanel;
 import jaego.toolbar.Toolbar;
@@ -40,9 +41,10 @@ public class AppFrame extends JFrame {
 
     private void initComponents() {
         toolbar = new Toolbar();
-        entryPanel = new EntryPanel();
-        listPanel = new ListPanel();
-        entryPanel.setOnSave(listPanel::addItem);
+        
+        EntryModel sharedModel = new EntryModel();
+        entryPanel = new EntryPanel(sharedModel);
+        listPanel = new ListPanel(sharedModel);
     }
 
     private void layoutComponents() {
