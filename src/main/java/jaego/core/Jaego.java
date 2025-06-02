@@ -11,7 +11,7 @@ import jaego.utils.LafManager;
  * 
  * @see AppFrame
  */
-public class MainApp {
+public class Jaego {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             LafManager.applyLightLaf();
