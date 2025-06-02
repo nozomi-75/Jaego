@@ -1,5 +1,7 @@
 package jaego.utils;
 
+import javax.swing.ImageIcon;
+
 /**
  * Displays an "About" dialog with information about the application.
  * <p>
@@ -15,7 +17,7 @@ public class AboutDialog {
             + "<p>&copy; 2025 Zens. Licensed under MIT.</p>"
             + "</html>";
 
-        // ImageIcon icon = new ImageIcon(AboutDialog.class.getResource("/icons/64x64.png"));
-        DialogUtils.showInfo(message, "About");
+        ImageIcon icon = new ImageIcon(AboutDialog.class.getResource("/icons/64x64.png"));
+        DialogUtils.showCustomDialog(message, "About", icon);
     }
 }

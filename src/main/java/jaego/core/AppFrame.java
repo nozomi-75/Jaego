@@ -3,6 +3,7 @@ package jaego.core;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -29,6 +30,7 @@ public class AppFrame extends JFrame {
         initFrame();
         initComponents();
         layoutComponents();
+        setAppIcon();
     }
 
     private void initFrame() {
@@ -60,6 +62,11 @@ public class AppFrame extends JFrame {
         splitPane.setDividerLocation(250);
         add(toolbar.getToolBar(), BorderLayout.NORTH);
         add(splitPane, BorderLayout.CENTER);
+    }
+
+    private void setAppIcon() {
+        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/48x48.png"));
+        setIconImage(icon.getImage());
     }
 
     public void showWindow() {
