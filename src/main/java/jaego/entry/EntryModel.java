@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingWorker;
+
 import jaego.utils.DialogUtils;
 import jaego.utils.SampleItem;
 
@@ -74,33 +76,48 @@ public class EntryModel {
      * </p>
      */
     private void loadFromFile() {
-        if (!inventoryFile.exists()) return;
+        new SwingWorker<List<SampleItem>, Void>() {
+            @Override
+            protected List<SampleItem> doInBackground() {
+                List<SampleItem> loadedItems = new ArrayList<>();
+                if (!inventoryFile.exists()) return loadedItems;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile))) {
-            String line;
-            boolean isFirstLine = true;
-
-            while ((line = reader.readLine()) != null) {
-                if (isFirstLine && line.startsWith("Product ID")) {
-                    isFirstLine = false;
-                    continue; // skip header
+                try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile))) {
+                    String line;
+                    boolean isHeader = true;
+                    while ((line = reader.readLine()) != null) {
+                        if (isHeader) {
+                            isHeader = false;
+                            continue; // Skip header line
+                        }
+                        String[] tokens = line.split(",", -1);
+                        if (tokens.length != 5) continue;
+                        SampleItem item = new SampleItem(
+                            tokens[0].trim(),
+                            tokens[1].trim(),
+                            Double.parseDouble(tokens[2].trim()),
+                            Integer.parseInt(tokens[3].trim()),
+                            tokens[4].trim()
+                        );
+                        loadedItems.add(item);
+                    }
+                } catch (IOException | NumberFormatException e) {
+                    DialogUtils.showError("Failed to load inventory: " + e.getMessage(), "Loading failed");
                 }
-                isFirstLine = false;
-
-                String[] tokens = line.split(",", -1);
-                if (tokens.length != 5) continue;
-                SampleItem item = new SampleItem(
-                    tokens[0].trim(),
-                    tokens[1].trim(),
-                    Double.parseDouble(tokens[2].trim()),
-                    Integer.parseInt(tokens[3].trim()),
-                    tokens[4].trim()
-                );
-                items.add(item);
+                return loadedItems;
             }
-        } catch (IOException | NumberFormatException e) {
-            DialogUtils.showError("Failed to load inventory: " + e.getMessage(), "Loading failed");
-        }
+
+            @Override
+            protected void done() {
+                try {
+                    items.clear();
+                    items.addAll(get());
+                    notifyListeners(); // Update views after loading
+                } catch (Exception e) {
+                    DialogUtils.showError("Failed to finalize inventory loading.", "Error");
+                }
+            }
+        }.execute();
     }
 
     /**
@@ -110,23 +127,26 @@ public class EntryModel {
      * </p>
      */
     private void saveToFile(SampleItem item) {
-        boolean writeHeader = !inventoryFile.exists() || inventoryFile.length() == 0;
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile, true))) {
-            if (writeHeader) {
-                writer.write("Product ID,Name,Price,Quantity,Category");
-                writer.newLine();
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                boolean fileExisted = inventoryFile.exists();
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile, true))) {
+                    if (!fileExisted) {
+                        writer.write("ID,Name,Price,Quantity,Category\n");
+                    }
+                    writer.write(String.format("%s,%s,%.2f,%d,%s%n",
+                        item.getID(),
+                        item.getName(),
+                        item.getPrice(),
+                        item.getQty(),
+                        item.getCategory()
+                    ));
+                } catch (IOException e) {
+                    DialogUtils.showError("Failed to save inventory: " + e.getMessage(), "Saving failed");
+                }
+                return null;
             }
-
-            writer.write(String.format("%s,%s,%.2f,%d,%s%n",
-                item.getID(),
-                item.getName(),
-                item.getPrice(),
-                item.getQty(),
-                item.getCategory()
-            ));
-        } catch (IOException e) {
-            DialogUtils.showError("Failed to save inventory: " + e.getMessage(), "Saving failed");
-        }
+        }.execute();
     }
 }
