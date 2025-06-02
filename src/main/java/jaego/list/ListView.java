@@ -10,6 +10,17 @@ import javax.swing.table.DefaultTableModel;
 
 import jaego.utils.SampleItem;
 
+/**
+ * {@code ListView} is a Swing component that visually represents a list of inventory items
+ * using a {@link JTable}. It provides methods to populate or clear the table content.
+ *
+ * <p><strong>Features:</strong></p>
+ * <ul>
+ *   <li>Displays ID, Name, Price, Quantity, and Category of each product</li>
+ *   <li>Supports scrollable view for long lists</li>
+ *   <li>Table content is managed via {@link DefaultTableModel}</li>
+ * </ul>
+ */
 public class ListView extends JPanel {
 
     private JTable table;
@@ -42,6 +53,12 @@ public class ListView extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Populates the table with a list of {@link SampleItem} objects.
+     * Clears any previous data before inserting the new rows.
+     *
+     * @param items the inventory items to display
+     */
     public void updateTable(List<SampleItem> items) {
         tableModel.setRowCount(0); // Clear existing rows
         for (SampleItem item : items) {
@@ -54,9 +71,5 @@ public class ListView extends JPanel {
             };
             tableModel.addRow(row);
         }
-    }
-
-    public void clearTable() {
-        tableModel.setRowCount(0);
     }
 }

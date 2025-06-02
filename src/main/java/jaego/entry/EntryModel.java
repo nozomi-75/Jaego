@@ -12,6 +12,13 @@ import java.util.List;
 import jaego.utils.DialogUtils;
 import jaego.utils.SampleItem;
 
+/**
+ * EntryModel serves as the shared data model that holds the list of {@link SampleItem}.
+ * <p>
+ * This model is used by both the entry panel (for adding items) and the list panel (for displaying them),
+ * enabling consistent and synchronized access to inventory data.
+ * </p>
+ */
 public class EntryModel {
     private final List<SampleItem> items = new ArrayList<>();
     private static final File inventoryFile = new File("inventory.csv");
@@ -22,26 +29,50 @@ public class EntryModel {
         loadFromFile();
     }
 
+    /**
+     * Adds an item to the inventory, triggers a save to file, and notifies all listeners.
+     *
+     * @param item the {@link SampleItem} to add
+     */
     public void addItem(SampleItem item) {
         items.add(item);
         saveToFile();
         notifyListeners();
     }
 
+    /**
+     * Returns a copy of the current list of inventory items.
+     *
+     * @return a new list containing all stored {@link SampleItem}
+     */
     public List<SampleItem> getItems() {
         return new ArrayList<>(items);
     }
 
+    /**
+     * Registers a listener to be notified when the inventory changes.
+     *
+     * @param listener a {@code Runnable} to call after changes (e.g., to update UI)
+     */
     public void addChangeListener(Runnable listener) {
         listeners.add(listener);
     }
 
+    /**
+     * Notifies all registered listeners of a change to the model.
+     */
     private void notifyListeners() {
         for (Runnable listener : listeners) {
             listener.run();
         }
     }
 
+    /**
+     * Loads items from the {@code inventory.csv} file into memory.
+     * <p>
+     * Lines are skipped if they do not have exactly 5 comma-separated fields.
+     * </p>
+     */
     private void loadFromFile() {
         if (!inventoryFile.exists()) return;
 
@@ -64,6 +95,12 @@ public class EntryModel {
         }
     }
 
+    /**
+     * Saves the current inventory items to {@code inventory.csv}.
+     * <p>
+     * Each line is written in CSV format: {@code id,name,price,quantity,category}.
+     * </p>
+     */
     private void saveToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile))) {
             for (SampleItem item : items) {

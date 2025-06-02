@@ -3,6 +3,9 @@ package jaego.utils;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
+/**
+ * Helper method for encapsulating dialog logic and follows MVC.
+ */
 public class DialogUtils {
     public static void showError(String message, String windowTitle) {
         JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.ERROR_MESSAGE);

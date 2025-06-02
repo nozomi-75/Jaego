@@ -4,6 +4,16 @@ import javax.swing.JPanel;
 
 import jaego.entry.EntryModel;
 
+/**
+ * {@code ListPanel} serves as the façade for the inventory listing feature.
+ * <p>
+ * This class is designed to be embedded in the main application layout (e.g., in a {@code JSplitPane}),
+ * and exposes its root panel via {@link #getViewPanel()} for integration.
+ * </p>
+ *
+ * @see ListView
+ * @see ListController
+ */
 public class ListPanel {
     @SuppressWarnings("unused")
     private final EntryModel entryModel;
@@ -21,9 +31,5 @@ public class ListPanel {
 
     public JPanel getViewPanel() {
         return view;
-    }
-
-    public void refresh() {
-        controller.refreshTable();
     }
 }

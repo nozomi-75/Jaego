@@ -4,6 +4,14 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 import jaego.utils.SampleItem;
 
+/**
+ * {@code EntryPanel} is a facade class that assembles the MVC components
+ * for the product entry form.
+ * <p>
+ * It wires together the {@link EntryModel}, {@link EntryView}, and {@link EntryController}
+ * and exposes only the view for display and model for external access.
+ * </p>
+ */
 public class EntryPanel {
 
     private final EntryModel model;

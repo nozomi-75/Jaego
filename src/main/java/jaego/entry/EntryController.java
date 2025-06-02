@@ -7,6 +7,19 @@ import java.util.function.Consumer;
 import jaego.utils.DialogUtils;
 import jaego.utils.SampleItem;
 
+/**
+ * EntryController manages user interactions for the EntryPanel.
+ * It listens for button clicks, validates input, and updates the model accordingly.
+ *
+ * <p>Typical usage includes saving a new product or resetting the form fields.</p>
+ *
+ * <p>It interacts with:
+ * <ul>
+ *   <li>{@link EntryView} – for retrieving input and setting up event handlers</li>
+ *   <li>{@link EntryModel} – for storing newly added items</li>
+ * </ul>
+ * </p>
+ */
 public class EntryController {
 
     private final EntryModel model;
@@ -19,6 +32,9 @@ public class EntryController {
         attachEventHandlers();
     }
 
+    /**
+     * Attaches listeners to the Save and Reset buttons on the view.
+     */
     private void attachEventHandlers() {
         view.getSaveButton().addActionListener(new ActionListener() {
             @Override
@@ -35,6 +51,10 @@ public class EntryController {
         });
     }
 
+    /**
+     * Gathers input from the view, validates it, creates a new item,
+     * adds it to the model, and clears the form if successful.
+     */
     private void handleSave() {
         String id = view.getIdInput();
         String name = view.getNameInput();
@@ -58,7 +78,15 @@ public class EntryController {
         DialogUtils.showInfo("Product saved successfully.", "Action successful");
         view.clearFields();
     }
-
+    
+    /**
+     * Registers a callback to be triggered whenever a new item is successfully saved.
+     * <p>
+     * This allows other components (e.g., the list panel) to react when new entries are added.
+     * </p>
+     *
+     * @param listener a {@code Consumer<SampleItem>} that will be called with the new item
+     */
     public void setOnSaveListener(Consumer<SampleItem> listener) {
         this.onSaveListener = listener;
     }
