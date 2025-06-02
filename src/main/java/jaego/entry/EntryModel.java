@@ -36,7 +36,7 @@ public class EntryModel {
      */
     public void addItem(SampleItem item) {
         items.add(item);
-        saveToFile();
+        saveToFile(item);
         notifyListeners();
     }
 
@@ -78,7 +78,15 @@ public class EntryModel {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile))) {
             String line;
+            boolean isFirstLine = true;
+
             while ((line = reader.readLine()) != null) {
+                if (isFirstLine && line.startsWith("Product ID")) {
+                    isFirstLine = false;
+                    continue; // skip header
+                }
+                isFirstLine = false;
+
                 String[] tokens = line.split(",", -1);
                 if (tokens.length != 5) continue;
                 SampleItem item = new SampleItem(
@@ -101,20 +109,22 @@ public class EntryModel {
      * Each line is written in CSV format: {@code id,name,price,quantity,category}.
      * </p>
      */
-    private void saveToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile))) {
-            // Always write the header first
-            writer.write("Product ID,Name,Price,Quantity,Category\n");
+    private void saveToFile(SampleItem item) {
+        boolean writeHeader = !inventoryFile.exists() || inventoryFile.length() == 0;
 
-            for (SampleItem item : items) {
-                writer.write(String.format("%s,%s,%.2f,%d,%s%n",
-                    item.getID(),
-                    item.getName(),
-                    item.getPrice(),
-                    item.getQty(),
-                    item.getCategory()
-                ));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile, true))) {
+            if (writeHeader) {
+                writer.write("Product ID,Name,Price,Quantity,Category");
+                writer.newLine();
             }
+
+            writer.write(String.format("%s,%s,%.2f,%d,%s%n",
+                item.getID(),
+                item.getName(),
+                item.getPrice(),
+                item.getQty(),
+                item.getCategory()
+            ));
         } catch (IOException e) {
             DialogUtils.showError("Failed to save inventory: " + e.getMessage(), "Saving failed");
         }
