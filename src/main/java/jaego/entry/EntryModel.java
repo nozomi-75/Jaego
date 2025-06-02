@@ -103,6 +103,9 @@ public class EntryModel {
      */
     private void saveToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile))) {
+            // Always write the header first
+            writer.write("Product ID,Name,Price,Quantity,Category\n");
+
             for (SampleItem item : items) {
                 writer.write(String.format("%s,%s,%.2f,%d,%s%n",
                     item.getID(),
