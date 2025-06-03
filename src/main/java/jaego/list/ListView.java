@@ -3,7 +3,9 @@ package jaego.list;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import javax.swing.JButton;
@@ -18,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 import jaego.edit.EditListener;
 import jaego.utils.CategoryOptions;
 import jaego.utils.SampleItem;
+
 
 /**
  * {@code ListView} is a Swing component that visually represents a list of inventory items
@@ -43,8 +46,11 @@ public class ListView extends JPanel {
     private JComboBox<String> filterCombo;
     private JComboBox<String> sortCombo;
 
+    private static final NumberFormat currencyFormat =
+        NumberFormat.getCurrencyInstance(Locale.getDefault());
+        
     private static final String[] COLUMN_NAMES = {
-        "Product ID", "Name", "Price", "Quantity", "Category"
+        "Product ID", "Name", "Price (" + currencyFormat.getCurrency().getCurrencyCode() + ")", "Quantity", "Category"
     };
 
     public void setEditListener(EditListener listener) {
@@ -99,7 +105,7 @@ public class ListView extends JPanel {
             Object[] row = {
                 item.getID(),
                 item.getName(),
-                item.getPrice(),
+                currencyFormat.format(item.getPrice()),
                 item.getQty(),
                 item.getCategory()
             };
