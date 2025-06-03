@@ -85,8 +85,8 @@ public class EntryModel {
     }
 
     /**
-     * Loads items from the {@code inventory.csv} file into memory.
-     * @see InventoryStorage
+     * Loads items from the {@code inventory.db} file into memory.
+     * @see ItemDAO
      */
     private void refresh() {
         try {
