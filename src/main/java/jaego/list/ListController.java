@@ -45,6 +45,8 @@ public class ListController {
         String sort = view.getSelectedSort();
         items.sort((a, b) -> {
             switch (sort) {
+                case "Sort: ID ↑": return a.getID().compareToIgnoreCase(b.getID());
+                case "Sort: ID ↓": return b.getID().compareToIgnoreCase(a.getID());
                 case "Sort: Name ↑": return a.getName().compareToIgnoreCase(b.getName());
                 case "Sort: Name ↓": return b.getName().compareToIgnoreCase(a.getName());
                 case "Sort: Qty. ↑": return Integer.compare(a.getQty(), b.getQty());

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -50,7 +51,7 @@ public class ListView extends JPanel {
         NumberFormat.getCurrencyInstance(Locale.getDefault());
         
     private static final String[] COLUMN_NAMES = {
-        "Product ID", "Name", "Price (" + currencyFormat.getCurrency().getCurrencyCode() + ")", "Quantity", "Category"
+        "Item ID", "Name", "Price (" + currencyFormat.getCurrency().getCurrencyCode() + ")", "Quantity", "Category"
     };
 
     public void setEditListener(EditListener listener) {
@@ -121,8 +122,16 @@ public class ListView extends JPanel {
         searchButton = new JButton("Search");
         resetButton = new JButton("Reset");
 
-        filterCombo = new JComboBox<>(CategoryOptions.CATEGORIES);
+        // Prepend "All Categories" to the category options
+        String[] fullCategoryList = Stream.concat(
+            Stream.of("All Categories"),
+            Arrays.stream(CategoryOptions.CATEGORIES)
+        ).toArray(String[]::new);
+
+        filterCombo = new JComboBox<>(fullCategoryList);
+
         sortCombo = new JComboBox<>(new String[] {
+            "Sort: ID ↑", "Sort: ID ↓",
             "Sort: Name ↑", "Sort: Name ↓",
             "Sort: Qty. ↑", "Sort: Qty. ↓",
             "Sort: Price ↑", "Sort: Price ↓"
