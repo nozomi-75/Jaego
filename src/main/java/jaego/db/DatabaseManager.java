@@ -32,7 +32,7 @@ public class DatabaseManager {
         } catch (SQLException e) {
             DialogUtils.showError(
                 "Failed to initialize database: " + e.getMessage(),
-                "Initialization error");
+                "Database error");
         }
     }
 }

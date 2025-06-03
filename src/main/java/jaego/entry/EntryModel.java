@@ -1,11 +1,10 @@
 package jaego.entry;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import jaego.db.ItemDAO;
 import jaego.utils.DialogUtils;
-import jaego.utils.InventoryStorage;
 import jaego.utils.SampleItem;
 
 /**
@@ -17,32 +16,50 @@ import jaego.utils.SampleItem;
  */
 public class EntryModel {
     private final List<SampleItem> items = new ArrayList<>();
-    private static final File inventoryFile = new File("inventory.csv");
     private final List<Runnable> listeners = new ArrayList<>();
+    private ItemDAO dao = new ItemDAO();
     
-    public EntryModel() {
-        loadFromFile();
+    public EntryModel(ItemDAO dao) {
+        this.dao = dao;
+        refresh();
     }
 
     public void addItem(SampleItem item) {
-        items.add(item);
-        saveToFile();
-        notifyListeners();
+        try {
+            dao.insertProduct(item);
+            items.add(item);
+            notifyListeners();
+        } catch (Exception e) {
+            DialogUtils.showError(
+                "Failed to add product to database: " + e.getMessage(),
+                "Error");
+        }
     }
 
     public void replaceItem(SampleItem oldItem, SampleItem newItem) {
-        int index = items.indexOf(oldItem);
-        if (index != -1) {
-            items.set(index, newItem);
-            saveToFile();
-            notifyListeners();
+        try {
+            dao.updateProduct(newItem);
+            int index = items.indexOf(oldItem);
+            if (index != -1) {
+                items.set(index, newItem);
+                notifyListeners();
+            }
+        } catch (Exception e) {
+            DialogUtils.showError(
+                "Failed to update product in database: " + e.getMessage(),
+                "Error");
         }
     }
 
     public void deleteItem(SampleItem item) {
-        if (items.remove(item)) {
-            saveToFile();
+        try {
+            dao.deleteProduct(item.getID());
+            items.remove(item);
             notifyListeners();
+        } catch (Exception e) {
+            DialogUtils.showError(
+                "Failed to delete product from database: " + e.getMessage(),
+                "Error");
         }
     }
     
@@ -71,23 +88,15 @@ public class EntryModel {
      * Loads items from the {@code inventory.csv} file into memory.
      * @see InventoryStorage
      */
-    private void loadFromFile() {
-        InventoryStorage.load(
-            inventoryFile,
-            loadedItems -> {
-                items.clear();
-                items.addAll(loadedItems);
-                notifyListeners();
-            },
-            error -> DialogUtils.showError("Failed to finalize inventory loading: " + error.getMessage(), "Error")
-        );
-    }
-
-    /**
-     * Saves the current inventory items to {@code inventory.csv}.
-     * @see InventoryStorage
-     */
-    private void saveToFile() {
-        InventoryStorage.save(inventoryFile, items);
+    private void refresh() {
+        try {
+            items.clear();
+            items.addAll(dao.getAllProducts());
+            notifyListeners();
+        } catch (Exception e) {
+            DialogUtils.showError(
+                "Failed to load inventory from database: " + e.getMessage(),
+                "Error");
+        }
     }
 }
