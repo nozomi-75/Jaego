@@ -13,8 +13,8 @@ public class EditDialog extends JDialog {
     private final JComboBox<String> categoryBox = new JComboBox<>(CategoryOptions.CATEGORIES);
     private final JTextField idField = new JTextField(20);
     private final JTextField nameField = new JTextField(20);
-    private final JTextField priceField = new JTextField(10);
-    private final JTextField qtyField = new JTextField(10);
+    private final JSpinner priceSpinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1));
+    private final JSpinner qtySpinner = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 
     private final EditController controller;
 
@@ -23,13 +23,14 @@ public class EditDialog extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        controller = new EditController(categoryBox, idField, nameField, priceField, qtyField);
+        controller = new EditController(categoryBox, idField, nameField, priceSpinner, qtySpinner);
         controller.populateFromItem(item);
 
         add(createFormPanel(), BorderLayout.CENTER);
         add(createButtonPanel(), BorderLayout.SOUTH);
 
         pack();
+        setResizable(false);
         setLocationRelativeTo(parent);
     }
 
@@ -44,9 +45,11 @@ public class EditDialog extends JDialog {
         panel.add(new JLabel("Name:"));
         panel.add(nameField);
         panel.add(new JLabel("Price:"));
-        panel.add(priceField);
+        priceSpinner.setPreferredSize(new Dimension(100, 25));
+        panel.add(priceSpinner);
         panel.add(new JLabel("Quantity:"));
-        panel.add(qtyField);
+        qtySpinner.setPreferredSize(new Dimension(100, 25));
+        panel.add(qtySpinner);
 
         return panel;
     }

@@ -1,6 +1,7 @@
 package jaego.edit;
 
 import javax.swing.JComboBox;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
 import jaego.utils.SampleItem;
@@ -16,29 +17,29 @@ public class EditController {
     private final JComboBox<String> categoryBox;
     private final JTextField idField;
     private final JTextField nameField;
-    private final JTextField priceField;
-    private final JTextField qtyField;
+    private final JSpinner priceSpinner;
+    private final JSpinner qtySpinner;
 
     public EditController(
         JComboBox<String> categoryBox,
         JTextField idField,
         JTextField nameField,
-        JTextField priceField,
-        JTextField qtyField
+        JSpinner priceSpinner,
+        JSpinner qtySpinner
     ) {
         this.categoryBox = categoryBox;
         this.idField = idField;
         this.nameField = nameField;
-        this.priceField = priceField;
-        this.qtyField = qtyField;
+        this.priceSpinner = priceSpinner;
+        this.qtySpinner = qtySpinner;
     }
 
     public void populateFromItem(SampleItem item) {
         categoryBox.setSelectedItem(item.getCategory());
         idField.setText(item.getID());
         nameField.setText(item.getName());
-        priceField.setText(String.valueOf(item.getPrice()));
-        qtyField.setText(String.valueOf(item.getQty()));
+        priceSpinner.setValue(item.getPrice());
+        qtySpinner.setValue(item.getQty());
     }
 
     public void markConfirmed() {
@@ -70,10 +71,10 @@ public class EditController {
     }
 
     public double getUpdatedPrice() {
-        return Double.parseDouble(priceField.getText().trim());
+        return (double) priceSpinner.getValue();
     }
-
+    
     public int getUpdatedQty() {
-        return Integer.parseInt(qtyField.getText().trim());
+        return (int) qtySpinner.getValue();
     }
 }
