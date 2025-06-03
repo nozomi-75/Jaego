@@ -71,12 +71,12 @@ public class EntryView extends JPanel {
     private void addFormRow(String labelText, JComponent field) {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 2));
         JLabel label = new JLabel(labelText);
-        label.setPreferredSize(new Dimension(100, 24)); // consistent label width
-        field.setPreferredSize(new Dimension(200, 24)); // consistent field height
+        label.setPreferredSize(new Dimension(100, 24));
+        field.setPreferredSize(new Dimension(200, 24));
         row.add(label);
         row.add(field);
         formPanel.add(row);
-        formPanel.add(Box.createVerticalStrut(2)); // spacing between rows
+        formPanel.add(Box.createVerticalStrut(2));
     }
 
     private void initButtonPanel() {

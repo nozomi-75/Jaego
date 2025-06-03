@@ -42,7 +42,7 @@ public class ListController {
 
         SampleItem selectedItem = items.get(rowIndex);  
 
-        EditDialog dialog = new EditDialog(null, selectedItem); // replace `null` with your main frame if available
+        EditDialog dialog = new EditDialog(null, selectedItem);
         dialog.setVisible(true);    
 
         if (dialog.isDeleteRequested()) {

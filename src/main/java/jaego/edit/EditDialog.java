@@ -10,11 +10,11 @@ import jaego.utils.SampleItem;
  * A modal dialog for editing or deleting a SampleItem.
  */
 public class EditDialog extends JDialog {
-
+    private final JComboBox<String> categoryBox = new JComboBox<>(CategoryOptions.CATEGORIES);
+    private final JTextField idField = new JTextField(20);
     private final JTextField nameField = new JTextField(20);
     private final JTextField priceField = new JTextField(10);
     private final JTextField qtyField = new JTextField(10);
-    private final JComboBox<String> categoryBox = new JComboBox<>(CategoryOptions.CATEGORIES);
 
     private final EditController controller;
 
@@ -23,7 +23,7 @@ public class EditDialog extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        controller = new EditController(nameField, priceField, qtyField, categoryBox);
+        controller = new EditController(categoryBox, idField, nameField, priceField, qtyField);
         controller.populateFromItem(item);
 
         add(createFormPanel(), BorderLayout.CENTER);
@@ -34,29 +34,30 @@ public class EditDialog extends JDialog {
     }
 
     private JPanel createFormPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 10, 20));
 
+        panel.add(new JLabel("Category:"));
+        panel.add(categoryBox);
+        panel.add(new JLabel("ID:"));
+        panel.add(idField);
         panel.add(new JLabel("Name:"));
         panel.add(nameField);
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
         panel.add(new JLabel("Quantity:"));
         panel.add(qtyField);
-        panel.add(new JLabel("Category:"));
-        panel.add(categoryBox);
 
         return panel;
     }
 
     private JPanel createButtonPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
 
         JButton saveBtn = new JButton("Save");
         JButton deleteBtn = new JButton("Delete");
         JButton cancelBtn = new JButton("Cancel");
 
-        // Style delete button
         deleteBtn.setBackground(new Color(220, 53, 69));
         deleteBtn.setForeground(Color.WHITE);
         deleteBtn.setFocusPainted(false);
@@ -89,6 +90,14 @@ public class EditDialog extends JDialog {
         return controller.isDeleteRequested();
     }
 
+    public String getUpdatedCategory() {
+        return controller.getUpdatedCategory();
+    }
+
+    public String getUpdatedId() {
+        return controller.getUpdatedId();
+    }
+
     public String getUpdatedName() {
         return controller.getUpdatedName();
     }
@@ -99,9 +108,5 @@ public class EditDialog extends JDialog {
 
     public int getUpdatedQty() {
         return controller.getUpdatedQty();
-    }
-
-    public String getUpdatedCategory() {
-        return controller.getUpdatedCategory();
     }
 }
