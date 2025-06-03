@@ -3,9 +3,12 @@ package jaego.entry;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +21,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.csv.QuoteMode;
 
 /**
  * EntryModel serves as the shared data model that holds the list of {@link SampleItem}.
@@ -139,32 +143,33 @@ public class EntryModel {
      * </p>
      */
     private void saveToFile() {
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(inventoryFile, false));
-                     CSVPrinter printer = new CSVPrinter(writer,
-                         CSVFormat.Builder.create()
-                             .setHeader("Product ID", "Name", "Price", "Quantity", "Category")
-                             .get())) {
-                            
-                    for (SampleItem item : items) {
-                        printer.printRecord(
-                            item.getID(),
-                            item.getName(),
-                            item.getPrice(),
-                            item.getQty(),
-                            item.getCategory()
-                        );
-                    }
-                
-                } catch (IOException e) {
-                    DialogUtils.showError("Failed to save inventory: " + e.getMessage(), "Saving failed");
+        try (OutputStream os = new FileOutputStream(inventoryFile);
+             OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
+             BufferedWriter writer = new BufferedWriter(osw)) {
+
+            // Write UTF-8 BOM
+            writer.write('\uFEFF');
+
+            CSVFormat format = CSVFormat.Builder.create()
+                .setHeader("Product ID", "Name", "Price", "Quantity", "Category")
+                .setQuoteMode(QuoteMode.ALL)
+                .setDelimiter(';')
+                .get();
+
+            try (CSVPrinter printer = new CSVPrinter(writer, format)) {
+                for (SampleItem item : items) {
+                    printer.printRecord(
+                        item.getID(),
+                        item.getName(),
+                        item.getPrice(),
+                        item.getQty(),
+                        item.getCategory()
+                    );
                 }
-                return null;
             }
-        };
-    
-        worker.execute();
+
+        } catch (IOException e) {
+            DialogUtils.showError("Failed to save inventory: " + e.getMessage(), "Saving failed");
+        }
     }
 }

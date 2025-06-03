@@ -86,7 +86,7 @@ public class EntryView extends JPanel {
     }
 
     private void initButtonPanel() {
-        saveButton = new JButton("Save Entry");
+        saveButton = new JButton("Add Item");
         resetButton = new JButton("Reset");
 
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
