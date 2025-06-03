@@ -16,6 +16,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
+import jaego.utils.CategoryOptions;
+
 public class EntryView extends JPanel {
 
     // Common UI elements
@@ -31,16 +33,6 @@ public class EntryView extends JPanel {
     private JPanel formPanel;
     private JPanel buttonPanel;
 
-    private static final String[] DEFAULT_CATEGORIES = {
-        "Stationery",
-        "Electronics",
-        "Office Supplies",
-        "Furniture",
-        "Cleaning Supplies",
-        "IT Equipment",
-        "Other"
-    };
-
     public EntryView() {
         initEntryPanel();
         initFormComponents();
@@ -54,7 +46,7 @@ public class EntryView extends JPanel {
     }
 
     private void initFormComponents() {
-        categoryComboBox = new JComboBox<>(DEFAULT_CATEGORIES);
+        categoryComboBox = new JComboBox<>(CategoryOptions.CATEGORIES);
         categoryComboBox.setEditable(false);
         
         idField = new JTextField();

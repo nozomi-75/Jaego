@@ -1,99 +1,107 @@
 package jaego.edit;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
+import jaego.utils.CategoryOptions;
 import jaego.utils.SampleItem;
 
+/**
+ * A modal dialog for editing or deleting a SampleItem.
+ */
 public class EditDialog extends JDialog {
 
     private final JTextField nameField = new JTextField(20);
     private final JTextField priceField = new JTextField(10);
     private final JTextField qtyField = new JTextField(10);
-    private final JComboBox<String> categoryBox = new JComboBox<>(new String[] {
-        "Office Supplies", "Electronics", "Furniture", "Stationery", "Misc"
-    });
+    private final JComboBox<String> categoryBox = new JComboBox<>(CategoryOptions.CATEGORIES);
 
-    private boolean confirmed = false;
-    private boolean deleteRequested = false;
+    private final EditController controller;
 
     public EditDialog(JFrame parent, SampleItem item) {
         super(parent, "Edit Item - " + item.getID(), true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout(10, 10));
 
-        setLayout(new BorderLayout());
+        controller = new EditController(nameField, priceField, qtyField, categoryBox);
+        controller.populateFromItem(item);
 
-        JPanel fields = new JPanel(new GridLayout(0, 2, 5, 5));
-        fields.add(new JLabel("Name:"));
-        fields.add(nameField);
-        fields.add(new JLabel("Price:"));
-        fields.add(priceField);
-        fields.add(new JLabel("Quantity:"));
-        fields.add(qtyField);
-        fields.add(new JLabel("Category:"));
-        fields.add(categoryBox);
-
-        nameField.setText(item.getName());
-        priceField.setText(String.valueOf(item.getPrice()));
-        qtyField.setText(String.valueOf(item.getQty()));
-        categoryBox.setSelectedItem(item.getCategory());
-
-        JPanel buttons = new JPanel();
-        JButton saveBtn = new JButton("Save");
-        JButton deleteBtn = new JButton("Delete");
-        JButton cancelBtn = new JButton("Cancel");
-        buttons.add(saveBtn);
-        buttons.add(deleteBtn);
-        buttons.add(cancelBtn);
-
-        saveBtn.addActionListener(e -> {
-            confirmed = true;
-            dispose();
-        });
-
-        deleteBtn.addActionListener(e -> {
-            deleteRequested = true;
-            dispose();
-        });
-
-        cancelBtn.addActionListener(e -> dispose());
-
-        add(fields, BorderLayout.CENTER);
-        add(buttons, BorderLayout.SOUTH);
+        add(createFormPanel(), BorderLayout.CENTER);
+        add(createButtonPanel(), BorderLayout.SOUTH);
 
         pack();
         setLocationRelativeTo(parent);
     }
 
+    private JPanel createFormPanel() {
+        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 10, 20));
+
+        panel.add(new JLabel("Name:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Price:"));
+        panel.add(priceField);
+        panel.add(new JLabel("Quantity:"));
+        panel.add(qtyField);
+        panel.add(new JLabel("Category:"));
+        panel.add(categoryBox);
+
+        return panel;
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
+
+        JButton saveBtn = new JButton("Save");
+        JButton deleteBtn = new JButton("Delete");
+        JButton cancelBtn = new JButton("Cancel");
+
+        // Style delete button
+        deleteBtn.setBackground(new Color(220, 53, 69));
+        deleteBtn.setForeground(Color.WHITE);
+        deleteBtn.setFocusPainted(false);
+
+        saveBtn.addActionListener(e -> {
+            controller.markConfirmed();
+            dispose();
+        });
+
+        deleteBtn.addActionListener(e -> {
+            controller.markDeleteRequested();
+            dispose();
+        });
+
+        cancelBtn.addActionListener(e -> dispose());
+
+        panel.add(saveBtn);
+        panel.add(deleteBtn);
+        panel.add(cancelBtn);
+        return panel;
+    }
+
+    // Public accessors (delegating to controller)
+
     public boolean isConfirmed() {
-        return confirmed;
+        return controller.isConfirmed();
     }
 
     public boolean isDeleteRequested() {
-        return deleteRequested;
+        return controller.isDeleteRequested();
     }
 
     public String getUpdatedName() {
-        return nameField.getText().trim();
+        return controller.getUpdatedName();
     }
 
     public double getUpdatedPrice() {
-        return Double.parseDouble(priceField.getText().trim());
+        return controller.getUpdatedPrice();
     }
 
     public int getUpdatedQty() {
-        return Integer.parseInt(qtyField.getText().trim());
+        return controller.getUpdatedQty();
     }
 
     public String getUpdatedCategory() {
-        return (String) categoryBox.getSelectedItem();
+        return controller.getUpdatedCategory();
     }
 }
