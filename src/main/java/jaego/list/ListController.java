@@ -36,23 +36,26 @@ public class ListController {
         view.updateTable(items);
     }
 
-    private void onEditRequested(int rowIndex) {
+    public void onEditRequested(int rowIndex) {
         List<SampleItem> items = model.getItems();
-        if (rowIndex < 0 || rowIndex >= items.size()) return;
+        if (rowIndex < 0 || rowIndex >= items.size()) return;   
 
-        SampleItem original = items.get(rowIndex);
-        EditDialog dialog = new EditDialog(null, original);
-        dialog.setVisible(true);
+        SampleItem selectedItem = items.get(rowIndex);  
 
-        if (dialog.isConfirmed()) {
-            SampleItem updated = new SampleItem(
-                original.getID(),
+        EditDialog dialog = new EditDialog(null, selectedItem); // replace `null` with your main frame if available
+        dialog.setVisible(true);    
+
+        if (dialog.isDeleteRequested()) {
+            model.deleteItem(selectedItem);
+        } else if (dialog.isConfirmed()) {
+            SampleItem updatedItem = new SampleItem(
+                selectedItem.getID(),
                 dialog.getUpdatedName(),
                 dialog.getUpdatedPrice(),
                 dialog.getUpdatedQty(),
                 dialog.getUpdatedCategory()
             );
-            model.replaceItem(original, updated); // Add this to EntryModel
+            model.replaceItem(selectedItem, updatedItem);
         }
     }
 }

@@ -23,6 +23,7 @@ public class EditDialog extends JDialog {
     });
 
     private boolean confirmed = false;
+    private boolean deleteRequested = false;
 
     public EditDialog(JFrame parent, SampleItem item) {
         super(parent, "Edit Item - " + item.getID(), true);
@@ -47,14 +48,22 @@ public class EditDialog extends JDialog {
 
         JPanel buttons = new JPanel();
         JButton saveBtn = new JButton("Save");
+        JButton deleteBtn = new JButton("Delete");
         JButton cancelBtn = new JButton("Cancel");
         buttons.add(saveBtn);
+        buttons.add(deleteBtn);
         buttons.add(cancelBtn);
 
         saveBtn.addActionListener(e -> {
             confirmed = true;
             dispose();
         });
+
+        deleteBtn.addActionListener(e -> {
+            deleteRequested = true;
+            dispose();
+        });
+
         cancelBtn.addActionListener(e -> dispose());
 
         add(fields, BorderLayout.CENTER);
@@ -66,6 +75,10 @@ public class EditDialog extends JDialog {
 
     public boolean isConfirmed() {
         return confirmed;
+    }
+
+    public boolean isDeleteRequested() {
+        return deleteRequested;
     }
 
     public String getUpdatedName() {

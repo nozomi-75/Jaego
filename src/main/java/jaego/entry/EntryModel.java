@@ -39,13 +39,19 @@ public class EntryModel {
         }
     }
 
+    public void deleteItem(SampleItem item) {
+        if (items.remove(item)) {
+            saveToFile();
+            notifyListeners();
+        }
+    }
+    
     public List<SampleItem> getItems() {
         return new ArrayList<>(items);
     }
 
     /**
      * Registers a listener to be notified when the inventory changes.
-     *
      * @param listener a {@code Runnable} to call after changes (e.g., to update UI)
      */
     public void addChangeListener(Runnable listener) {
