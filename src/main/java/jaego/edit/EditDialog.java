@@ -41,7 +41,7 @@ public class EditDialog extends JDialog {
 
         controller = new EditController(categoryBox, idField, nameField, priceSpinner, qtySpinner);
         controller.populateFromItem(item);
-
+        
         add(createFormPanel(), BorderLayout.CENTER);
         add(createButtonPanel(), BorderLayout.SOUTH);
 
@@ -74,24 +74,18 @@ public class EditDialog extends JDialog {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         Dimension btnSize = new Dimension(72, 25);
 
-        JButton saveBtn = ButtonFactory.createButton("Save", () -> {
+        JButton saveBtn = ButtonFactory.createSizedButton("Save", () -> {
             controller.markConfirmed();
             dispose();
-        });
+        }, btnSize);
 
-        JButton deleteBtn = ButtonFactory.createButton("Delete", () -> {
+        JButton deleteBtn = ButtonFactory.createSizedColoredButton("Delete", () -> {
             controller.markDeleteRequested();
             dispose();
-        });
-        deleteBtn.setBackground(new Color(220, 53, 69));
-        deleteBtn.setForeground(Color.WHITE);
+        }, btnSize, new Color(165, 29, 45), Color.WHITE);
 
-        JButton cancelBtn = ButtonFactory.createButton("Cancel", () -> { dispose(); });
-
-        Stream.of(saveBtn, deleteBtn, cancelBtn).forEach(btn -> {
-            btn.setPreferredSize(btnSize);
-            panel.add(btn);
-        });
+        JButton cancelBtn = ButtonFactory.createSizedButton("Cancel", () -> dispose(), btnSize);
+        Stream.of(saveBtn, deleteBtn, cancelBtn).forEach(btn -> panel.add(btn));
         return panel;
     }
 

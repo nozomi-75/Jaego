@@ -1,10 +1,13 @@
 package jaego.utils;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 
 import jaego.toolbar.Toolbar;
 
@@ -21,7 +24,26 @@ public class ButtonFactory {
         return button;
     }
 
-    public static void createToggleButton(String text, Runnable action, Consumer<JToggleButton> assignField, javax.swing.JToolBar toolbar) {
+    public static JButton createSizedButton(String text, Runnable action, Dimension dimension) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        button.addActionListener(e -> action.run());
+        button.setPreferredSize(dimension);
+        return button;
+    }
+
+        public static JButton createSizedColoredButton(String text, Runnable action, Dimension dimension, Color background, Color foreground) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        button.addActionListener(e -> action.run());
+
+        button.setPreferredSize(dimension);
+        button.setBackground(background);
+        button.setForeground(foreground);
+        return button;
+    }
+
+    public static void createToggleButton(String text, Runnable action, Consumer<JToggleButton> assignField, JToolBar toolbar) {
         JToggleButton btn = new JToggleButton(text);
         btn.setFocusPainted(false);
         btn.addActionListener(e -> action.run());
