@@ -1,8 +1,24 @@
 package jaego.edit;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.util.stream.Stream;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+
+import jaego.utils.ButtonFactory;
 import jaego.utils.CategoryOptions;
 import jaego.utils.SampleItem;
 
@@ -56,30 +72,26 @@ public class EditDialog extends JDialog {
 
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        Dimension btnSize = new Dimension(72, 25);
 
-        JButton saveBtn = new JButton("Save");
-        JButton deleteBtn = new JButton("Delete");
-        JButton cancelBtn = new JButton("Cancel");
-
-        deleteBtn.setBackground(new Color(220, 53, 69));
-        deleteBtn.setForeground(Color.WHITE);
-        deleteBtn.setFocusPainted(false);
-
-        saveBtn.addActionListener(e -> {
+        JButton saveBtn = ButtonFactory.createButton("Save", () -> {
             controller.markConfirmed();
             dispose();
         });
 
-        deleteBtn.addActionListener(e -> {
+        JButton deleteBtn = ButtonFactory.createButton("Delete", () -> {
             controller.markDeleteRequested();
             dispose();
         });
+        deleteBtn.setBackground(new Color(220, 53, 69));
+        deleteBtn.setForeground(Color.WHITE);
 
-        cancelBtn.addActionListener(e -> dispose());
+        JButton cancelBtn = ButtonFactory.createButton("Cancel", () -> { dispose(); });
 
-        panel.add(saveBtn);
-        panel.add(deleteBtn);
-        panel.add(cancelBtn);
+        Stream.of(saveBtn, deleteBtn, cancelBtn).forEach(btn -> {
+            btn.setPreferredSize(btnSize);
+            panel.add(btn);
+        });
         return panel;
     }
 
