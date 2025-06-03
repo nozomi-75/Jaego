@@ -1,6 +1,8 @@
 package jaego.list;
 
 import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -8,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import jaego.edit.EditListener;
 import jaego.utils.SampleItem;
 
 /**
@@ -25,10 +28,15 @@ public class ListView extends JPanel {
 
     private JTable table;
     private DefaultTableModel tableModel;
+    private EditListener editListener;
 
     private static final String[] COLUMN_NAMES = {
         "Product ID", "Name", "Price", "Quantity", "Category"
     };
+
+    public void setEditListener(EditListener listener) {
+        this.editListener = listener;
+    } 
 
     public ListView() {
         initView();
@@ -51,6 +59,18 @@ public class ListView extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    int selectedRow = table.getSelectedRow();
+                    if (editListener != null) {
+                        editListener.editRequested(selectedRow);
+                    }
+                }
+            }
+        });
     }
 
     /**

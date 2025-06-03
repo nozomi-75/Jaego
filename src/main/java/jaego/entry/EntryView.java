@@ -18,14 +18,16 @@ import javax.swing.SpinnerNumberModel;
 
 public class EntryView extends JPanel {
 
+    // Common UI elements
+    private JComboBox<String> categoryComboBox;
     private JTextField idField;
     private JTextField nameField;
     private JSpinner priceSpinner;
     private JSpinner qtySpinner;
-    private JComboBox<String> categoryComboBox;
     private JButton saveButton;
     private JButton resetButton;
 
+    // Containers for element layout
     private JPanel formPanel;
     private JPanel buttonPanel;
 

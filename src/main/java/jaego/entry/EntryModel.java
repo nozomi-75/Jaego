@@ -51,6 +51,16 @@ public class EntryModel {
         notifyListeners();
     }
 
+    public void replaceItem(SampleItem oldItem, SampleItem newItem) {
+        int index = items.indexOf(oldItem);
+        if (index != -1) {
+            items.set(index, newItem);
+            saveToFile();
+            notifyListeners();
+        }
+    }
+
+
     /**
      * Returns a copy of the current list of inventory items.
      *
@@ -95,7 +105,12 @@ public class EntryModel {
                      CSVParser parser = CSVFormat.DEFAULT
                          .builder()
                          .setHeader("Product ID", "Name", "Price", "Quantity", "Category")
+                         .setDelimiter(';')
                          .setSkipHeaderRecord(true)
+                         .setTrim(true)
+                         .setIgnoreSurroundingSpaces(true)
+                         .setQuote('"')
+                         .setIgnoreEmptyLines(true)
                          .get()
                          .parse(reader)) {
 
@@ -128,7 +143,7 @@ public class EntryModel {
                     items.addAll(parsedItems);
                     notifyListeners();
                 } catch (Exception e) {
-                    DialogUtils.showError("Failed to finalize inventory loading.", "Error");
+                    DialogUtils.showError("Failed to finalize inventory loading: " + e.getMessage(), "Error");
                 }
             }
         };

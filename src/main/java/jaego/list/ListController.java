@@ -2,6 +2,7 @@ package jaego.list;
 
 import java.util.List;
 
+import jaego.edit.EditDialog;
 import jaego.entry.EntryModel;
 import jaego.utils.SampleItem;
 
@@ -27,10 +28,31 @@ public class ListController {
     public ListController(EntryModel model, ListView view) {
         this.model = model;
         this.view = view;
+        view.setEditListener(this::onEditRequested);
     }
 
     public void refreshTable() {
         List<SampleItem> items = model.getItems();
         view.updateTable(items);
+    }
+
+    private void onEditRequested(int rowIndex) {
+        List<SampleItem> items = model.getItems();
+        if (rowIndex < 0 || rowIndex >= items.size()) return;
+
+        SampleItem original = items.get(rowIndex);
+        EditDialog dialog = new EditDialog(null, original);
+        dialog.setVisible(true);
+
+        if (dialog.isConfirmed()) {
+            SampleItem updated = new SampleItem(
+                original.getID(),
+                dialog.getUpdatedName(),
+                dialog.getUpdatedPrice(),
+                dialog.getUpdatedQty(),
+                dialog.getUpdatedCategory()
+            );
+            model.replaceItem(original, updated); // Add this to EntryModel
+        }
     }
 }
