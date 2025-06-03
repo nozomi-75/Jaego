@@ -122,6 +122,31 @@ public class EntryModel {
         }.execute();
     }
 
+    public void search(String query) {
+        new SwingWorker<List<SampleItem>, Void>() {
+            @Override
+            protected List<SampleItem> doInBackground() throws Exception {
+                return dao.searchProducts(query);
+            }
+        
+            @Override
+            protected void done() {
+                try {
+                    List<SampleItem> searchResults = get();
+                    SwingUtilities.invokeLater(() -> {
+                        items.clear();
+                        items.addAll(searchResults);
+                        notifyListeners();
+                    });
+                } catch (Exception e) {
+                    SwingUtilities.invokeLater(() -> DialogUtils.showError(
+                        "Search failed: " + e.getMessage(),
+                        "Search Error"));
+                }
+            }
+        }.execute();
+    }
+
     public List<SampleItem> getItems() {
         return new ArrayList<>(items); // Still safe, since items only mutated on EDT
     }

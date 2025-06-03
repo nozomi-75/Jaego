@@ -29,10 +29,32 @@ public class ListController {
         this.model = model;
         this.view = view;
         view.setEditListener(this::onEditRequested);
+        view.addToolbarListeners(this::onSearch, this::onResetSearch, this::refreshTable);
     }
 
     public void refreshTable() {
         List<SampleItem> items = model.getItems();
+    
+        // Filter
+        String category = view.getSelectedCategory();
+        if (!"All Categories".equals(category)) {
+            items.removeIf(item -> !item.getCategory().equalsIgnoreCase(category));
+        }
+    
+        // Sort
+        String sort = view.getSelectedSort();
+        items.sort((a, b) -> {
+            switch (sort) {
+                case "Sort: Name ↑": return a.getName().compareToIgnoreCase(b.getName());
+                case "Sort: Name ↓": return b.getName().compareToIgnoreCase(a.getName());
+                case "Sort: Qty. ↑": return Integer.compare(a.getQty(), b.getQty());
+                case "Sort: Qty. ↓": return Integer.compare(b.getQty(), a.getQty());
+                case "Sort: Price ↑": return Double.compare(a.getPrice(), b.getPrice());
+                case "Sort: Price ↓": return Double.compare(b.getPrice(), a.getPrice());
+                default: return 0;
+            }
+        });
+    
         view.updateTable(items);
     }
 
@@ -57,5 +79,14 @@ public class ListController {
             );
             model.replaceItem(selectedItem, updatedItem);
         }
+    }
+
+    public void onSearch() {
+        String query = view.getSearchQuery();
+        model.search(query);
+    }
+
+    public void onResetSearch() {
+        model.refreshInBackground();
     }
 }
