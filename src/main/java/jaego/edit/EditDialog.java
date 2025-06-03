@@ -34,7 +34,7 @@ public class EditDialog extends JDialog {
     }
 
     private JPanel createFormPanel() {
-        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(0, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 10, 20));
 
         panel.add(new JLabel("Category:"));
