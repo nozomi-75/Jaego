@@ -15,6 +15,7 @@ public class ToolbarView {
     public interface Listener {
         void onToggleTheme(boolean darkMode);
         void onShowAbout();
+        void onExportCsv();
     }
 
     public ToolbarView() {
@@ -33,6 +34,13 @@ public class ToolbarView {
     }
 
     private void initToolbarComponents() {
+        toolbar.add(ButtonFactory
+            .createButton(
+                "Export CSV",
+                () -> listener.onExportCsv()
+            )
+        );
+
         ButtonFactory.createToggleButton("Dark mode", () -> {
             boolean darkMode = themeToggleButton.isSelected();
             listener.onToggleTheme(darkMode);
