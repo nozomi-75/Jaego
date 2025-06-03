@@ -1,6 +1,10 @@
 # Jaego
 
-**Jaego** (재고) means "stock" or "inventory" in Korean. It is a simple Java Swing program to help manage product inventories.
+**Jaego** (재고) means "stock" or "inventory" in Korean. 
+
+![Program screenshot](program-screenshot.png)
+
+It is a simple Java Swing program to help manage item inventories. Whether you're organizing office supplies, classroom tools, or personal collections, Jaego offers a clean, intuitive interface with essential features like database persistence, CSV export, and flexible search/filter/sort tools.
 
 ## Requirements
 - Jaego requires **JDK 17 or higher** to run.
@@ -8,12 +12,13 @@
 
 ## Features
 
-- Add new products with ID, name, price, quantity, and category.
-- Edit existing products **via double-click** with a user-friendly dialog.
-- Delete items from the list within the edit view.
-- Built-in input validation during entry save.
-- Organized product list with table view.
-- Save and load product data to/from an **`inventory.csv`** file.
+- Add new items with ID, name, price, quantity, and category.
+- Edit existing items **via double-click** with a user-friendly dialog.
+- Persist inventory data using a local `inventory.db` SQLite database.
+- Export inventory items to a **CSV file** (via Apache Commons CSV).
+- Efficient **search**, **filter**, and **sort** capabilities.
+- Displays prices using **locale-aware currency** formatting.
+
 
 ## Running
 
@@ -41,25 +46,30 @@
     mvn clean package
     ```
 
-    The JAR file with all dependencies will be generated at `target/Jaego-1.1-SNAPSHOT-jar-with-dependencies.jar`.
+    The JAR file with all dependencies will be generated at `target/Jaego-VERSION-jar-with-dependencies.jar`.
+    > Replace "VERSION" with the program version (e.g. 1.2-SNAPSHOT). Refer to `pom.xml` for version details.
 
 3. **Run the generated JAR:**
 
     ```sh
-    java -jar target/Jaego-1.1-SNAPSHOT-jar-with-dependencies.jar
+    java -jar target/Jaego-VERSION-jar-with-dependencies.jar
     ```
 
 ## Future enhancements
 
-- Category filtering and search for faster item lookup
-- Summary statistics (e.g. total inventory value, item counts by category)
-- Improved UI and navigation (keyboard shortcuts, better layout, theming)
-- Import products from CSV to complement existing export functionality
+- Summary statistics (e.g. total inventory value, item counts by category).
+- Improved UI and navigation (keyboard shortcuts, better layout, theming).
+- Import inventory data from CSV (with auto-mapping and validation).
+- Support for multiple currencies or manual currency override.
+- Advanced filter options (e.g., quantity range, price range).
+- Role-based database schema, access, or user authentication.
 
 ## Credits
 
 - [FlatLaf](https://www.formdev.com/flatlaf/) is used for the look and feel of the program.
-- [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) is used for reading and writing `inventory.csv`.
+- [SQLite](https://www.sqlite.org/) is used for a serverless, self-contained SQL database engine.
+- [SQLite JDBC Driver](https://github.com/xerial/sqlite-jdbc) is used to access SQLite databases.
+- [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) is used for exporting the item entries.
 
 ## License
 
