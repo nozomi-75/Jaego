@@ -15,7 +15,6 @@
 *.o
 *.so
 *.txt
-*.csv
 
 # Packages #
 ############
@@ -33,6 +32,8 @@
 # Logs and databases #
 ######################
 *.log
+*.csv
+*.db
 *.sql
 *.sqlite
 

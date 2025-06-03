@@ -2,6 +2,7 @@ package jaego.core;
 
 import javax.swing.SwingUtilities;
 
+import jaego.db.DatabaseManager;
 import jaego.utils.LafManager;
 
 /**
@@ -14,6 +15,7 @@ import jaego.utils.LafManager;
 public class Jaego {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            DatabaseManager.initDB();
             LafManager.applyLightLaf();
             new AppFrame("Jaego").showWindow();
         });

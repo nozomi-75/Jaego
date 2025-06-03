@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import jaego.db.ItemDAO;
 import jaego.entry.EntryModel;
 import jaego.entry.EntryPanel;
 import jaego.list.ListPanel;
@@ -43,7 +44,8 @@ public class AppFrame extends JFrame {
 
     private void initComponents() {
         toolbar = new Toolbar();
-        EntryModel sharedModel = new EntryModel();
+        ItemDAO dao = new ItemDAO();
+        EntryModel sharedModel = new EntryModel(dao);
         entryPanel = new EntryPanel(sharedModel);
         listPanel = new ListPanel(sharedModel);
     }
