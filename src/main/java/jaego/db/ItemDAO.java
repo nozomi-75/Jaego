@@ -70,4 +70,29 @@ public class ItemDAO {
             stmt.executeUpdate();
         }
     }
+
+    public List<SampleItem> searchProducts(String query) throws SQLException {
+        List<SampleItem> results = new ArrayList<>();
+        String sql = "SELECT * FROM items WHERE LOWER(name) LIKE ? OR LOWER(category) LIKE ?";
+    
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String pattern = "%" + query.toLowerCase() + "%";
+            stmt.setString(1, pattern);
+            stmt.setString(2, pattern);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    SampleItem item = new SampleItem(
+                        rs.getString("item_id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getInt("quantity"),
+                        rs.getString("category")
+                    );
+                    results.add(item);
+                }
+            }
+        }
+        return results;
+    }
 }

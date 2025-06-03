@@ -62,8 +62,8 @@ public class EntryView extends JPanel {
         formPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
         
         addFormRow("Category:", categoryComboBox);
-        addFormRow("Product ID:", idField);
-        addFormRow("Product Name:", nameField);
+        addFormRow("Item ID:", idField);
+        addFormRow("Item Name:", nameField);
         addFormRow("Price:", priceSpinner);
         addFormRow("Quantity:", qtySpinner);
     }

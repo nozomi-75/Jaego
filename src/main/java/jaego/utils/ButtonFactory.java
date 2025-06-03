@@ -32,7 +32,14 @@ public class ButtonFactory {
         return button;
     }
 
-        public static JButton createSizedColoredButton(String text, Runnable action, Dimension dimension, Color background, Color foreground) {
+    public static JButton createSizedNRButton(String text, Dimension dimension) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        button.setPreferredSize(dimension);
+        return button;
+    }
+
+    public static JButton createSizedColoredButton(String text, Runnable action, Dimension dimension, Color background, Color foreground) {
         JButton button = new JButton(text);
         button.setFocusPainted(false);
         button.addActionListener(e -> action.run());

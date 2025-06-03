@@ -3,15 +3,25 @@ package jaego.list;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Stream;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import jaego.edit.EditListener;
+import jaego.utils.CategoryOptions;
 import jaego.utils.SampleItem;
+
 
 /**
  * {@code ListView} is a Swing component that visually represents a list of inventory items
@@ -30,8 +40,18 @@ public class ListView extends JPanel {
     private DefaultTableModel tableModel;
     private EditListener editListener;
 
+    private JLabel searchLabel;
+    private JTextField searchField;
+    private JButton searchButton;
+    private JButton resetButton;
+    private JComboBox<String> filterCombo;
+    private JComboBox<String> sortCombo;
+
+    private static final NumberFormat currencyFormat =
+        NumberFormat.getCurrencyInstance(Locale.getDefault());
+        
     private static final String[] COLUMN_NAMES = {
-        "Product ID", "Name", "Price", "Quantity", "Category"
+        "Item ID", "Name", "Price (" + currencyFormat.getCurrency().getCurrencyCode() + ")", "Quantity", "Category"
     };
 
     public void setEditListener(EditListener listener) {
@@ -44,11 +64,12 @@ public class ListView extends JPanel {
 
     private void initView() {
         setLayout(new BorderLayout());
+        initSearchPanel();
 
         tableModel = new DefaultTableModel(COLUMN_NAMES, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+                return false;
             }
         };
 
@@ -85,11 +106,59 @@ public class ListView extends JPanel {
             Object[] row = {
                 item.getID(),
                 item.getName(),
-                item.getPrice(),
+                currencyFormat.format(item.getPrice()),
                 item.getQty(),
                 item.getCategory()
             };
             tableModel.addRow(row);
         }
+    }
+
+    private void initSearchPanel() {
+        JPanel topPanel = new JPanel();
+
+        searchLabel = new JLabel("Search: ");
+        searchField = new JTextField(10);
+        searchButton = new JButton("Search");
+        resetButton = new JButton("Reset");
+
+        // Prepend "All Categories" to the category options
+        String[] fullCategoryList = Stream.concat(
+            Stream.of("All Categories"),
+            Arrays.stream(CategoryOptions.CATEGORIES)
+        ).toArray(String[]::new);
+
+        filterCombo = new JComboBox<>(fullCategoryList);
+
+        sortCombo = new JComboBox<>(new String[] {
+            "Sort: ID ↑", "Sort: ID ↓",
+            "Sort: Name ↑", "Sort: Name ↓",
+            "Sort: Qty. ↑", "Sort: Qty. ↓",
+            "Sort: Price ↑", "Sort: Price ↓"
+        });
+
+        Stream.of(searchLabel, searchField, searchButton, resetButton, filterCombo, sortCombo).forEach(cmp -> topPanel.add(cmp));
+        add(topPanel, BorderLayout.NORTH);
+}
+
+    public String getSearchQuery() {
+        return searchField.getText().trim();
+    }
+
+    public String getSelectedCategory() {
+        return (String) filterCombo.getSelectedItem();
+    }
+
+    public String getSelectedSort() {
+        return (String) sortCombo.getSelectedItem();
+    }
+
+    public void addToolbarListeners(Runnable onSearch, Runnable onReset, Runnable onFilterSortChanged) {
+        searchButton.addActionListener(e -> onSearch.run());
+        resetButton.addActionListener(e -> onReset.run());
+        searchField.addActionListener(e -> onSearch.run());
+
+        filterCombo.addActionListener(e -> onFilterSortChanged.run());
+        sortCombo.addActionListener(e -> onFilterSortChanged.run());
     }
 }
