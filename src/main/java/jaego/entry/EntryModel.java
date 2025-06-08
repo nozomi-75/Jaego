@@ -20,19 +20,18 @@ public class EntryModel {
     }
 
     public void addItem(SampleItem item) {
-        new SwingWorker<Void, Void>() {
+        new SwingWorker<SampleItem, Void>() {
             @Override
-            protected Void doInBackground() throws Exception {
-                dao.insertProduct(item);
-                return null;
+            protected SampleItem doInBackground() throws Exception {
+                return dao.insertProduct(item);
             }
 
             @Override
             protected void done() {
                 try {
-                    get();
+                    SampleItem savedItem = get();
                     SwingUtilities.invokeLater(() -> {
-                        items.add(item);
+                        items.add(savedItem);
                         notifyListeners();
                     });
                 } catch (Exception e) {
@@ -76,7 +75,7 @@ public class EntryModel {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                dao.deleteProduct(item.getID());
+                dao.deleteProduct(item.getItemNum());
                 return null;
             }
 

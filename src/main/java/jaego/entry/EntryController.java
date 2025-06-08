@@ -67,7 +67,7 @@ public class EntryController {
             return;
         }
 
-        SampleItem item = new SampleItem(id, name, price, quantity, category);
+        SampleItem item = new SampleItem(0, id, name, price, quantity, category);
         model.addItem(item);
 
         // Notify listener if set

@@ -11,19 +11,36 @@ import java.util.ArrayList;
 import jaego.utils.SampleItem;
 
 public class ItemDAO {
-    public void insertProduct (SampleItem item) throws SQLException {
+    public SampleItem insertProduct(SampleItem item) throws SQLException {
         String sql = "INSERT INTO items (item_id, name, price, quantity, category) VALUES (?, ?, ?, ?, ?)";
-
+        String returningSql = "SELECT last_insert_rowid() AS item_num";
+    
         try (Connection conn = DatabaseManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             Statement returningStmt = conn.createStatement()) {
             stmt.setString(1, item.getID());
             stmt.setString(2, item.getName());
             stmt.setDouble(3, item.getPrice());
             stmt.setInt(4, item.getQty());
             stmt.setString(5, item.getCategory());
-
+            
             stmt.executeUpdate();
+            
+            try (ResultSet rs = returningStmt.executeQuery(returningSql)) {
+                if (rs.next()) {
+                    int generatedItemNum = rs.getInt("item_num");
+                    return new SampleItem(
+                        generatedItemNum,
+                        item.getID(),
+                        item.getName(),
+                        item.getPrice(),
+                        item.getQty(),
+                        item.getCategory()
+                    );
+                }
+            }
         }
+        throw new SQLException("Failed to retrieve generated item_num.");
     }
 
     public List<SampleItem> getAllProducts() throws SQLException {
@@ -34,6 +51,7 @@ public class ItemDAO {
         ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 SampleItem item = new SampleItem(
+                    rs.getInt("item_num"),
                     rs.getString("item_id"),
                     rs.getString("name"),
                     rs.getDouble("price"),
@@ -47,26 +65,27 @@ public class ItemDAO {
     }
 
     public void updateProduct(SampleItem item) throws SQLException {
-        String sql = "UPDATE items SET name = ?, price = ?, quantity = ?, category = ? WHERE item_id = ?";
+        String sql = "UPDATE items SET item_id = ?, name = ?, price = ?, quantity = ?, category = ? WHERE item_num = ?";
 
         try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, item.getName());
-            stmt.setDouble(2, item.getPrice());
-            stmt.setInt(3, item.getQty());
-            stmt.setString(4, item.getCategory());
-            stmt.setString(5, item.getID());
+            stmt.setString(1, item.getID());
+            stmt.setString(2, item.getName());
+            stmt.setDouble(3, item.getPrice());
+            stmt.setInt(4, item.getQty());
+            stmt.setString(5, item.getCategory());
+            stmt.setInt(6, item.getItemNum());
 
             stmt.executeUpdate();
         }
     }
 
-    public void deleteProduct(String itemId) throws SQLException {
-        String sql = "DELETE FROM items WHERE item_id = ?";
+    public void deleteProduct(int itemNum) throws SQLException {
+        String sql = "DELETE FROM items WHERE item_num = ?";
 
         try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, itemId);
+            stmt.setInt(1, itemNum);
             stmt.executeUpdate();
         }
     }
@@ -83,6 +102,7 @@ public class ItemDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     SampleItem item = new SampleItem(
+                        rs.getInt("item_num"),
                         rs.getString("item_id"),
                         rs.getString("name"),
                         rs.getDouble("price"),

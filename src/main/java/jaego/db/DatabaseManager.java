@@ -18,7 +18,8 @@ public class DatabaseManager {
     public static void initDB() {
         String createTableSQL = """
             CREATE TABLE IF NOT EXISTS items (
-                item_id TEXT PRIMARY KEY,
+                item_num INTEGER PRIMARY KEY AUTOINCREMENT,
+                item_id TEXT UNIQUE,
                 name TEXT NOT NULL,
                 price REAL NOT NULL CHECK (price >= 0),
                 quantity INTEGER NOT NULL CHECK (quantity >= 0),

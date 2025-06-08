@@ -11,6 +11,7 @@ package jaego.utils;
  * @param itemCategory The category of an item.
  */
 public class SampleItem {
+    private int itemNum;
     private String itemID;
     private String itemName;
     private double itemPrice;
@@ -18,6 +19,7 @@ public class SampleItem {
     private String itemCategory;
 
     public SampleItem(
+        int itemNum,
         String itemID,
         String itemName,
         double itemPrice,
@@ -32,6 +34,7 @@ public class SampleItem {
             throw new InvalidItemException("The item price should not be negative.");
         }
 
+        this.itemNum = itemNum;
         this.itemID = itemID;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
@@ -46,6 +49,9 @@ public class SampleItem {
     }
 
     // GETTER METHODS STARTING HERE
+    public int getItemNum() {
+        return itemNum;
+    }
 
     public String getID() {
         return itemID;

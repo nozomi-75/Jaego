@@ -73,7 +73,8 @@ public class ListController {
             model.deleteItem(selectedItem);
         } else if (dialog.isConfirmed()) {
             SampleItem updatedItem = new SampleItem(
-                selectedItem.getID(),
+                selectedItem.getItemNum(),
+                dialog.getUpdatedId(),
                 dialog.getUpdatedName(),
                 dialog.getUpdatedPrice(),
                 dialog.getUpdatedQty(),
