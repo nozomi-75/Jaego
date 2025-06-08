@@ -56,8 +56,8 @@ public class EditDialog extends JDialog {
 
         panel.add(new JLabel("Category:"));
         panel.add(categoryBox);
-        panel.add(new JLabel("ID:"));
-        panel.add(idField);
+        // panel.add(new JLabel("ID:"));
+        // panel.add(idField);
         panel.add(new JLabel("Name:"));
         panel.add(nameField);
         panel.add(new JLabel("Price:"));

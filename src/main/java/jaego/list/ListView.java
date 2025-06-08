@@ -139,7 +139,7 @@ public class ListView extends JPanel {
 
         Stream.of(searchLabel, searchField, searchButton, resetButton, filterCombo, sortCombo).forEach(cmp -> topPanel.add(cmp));
         add(topPanel, BorderLayout.NORTH);
-}
+    }
 
     public String getSearchQuery() {
         return searchField.getText().trim();
