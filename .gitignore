@@ -5,6 +5,16 @@
 ######################
 /.vscode/
 /target/
+*.ps1
+
+# Ignore jpackage output #
+##########################
+*.deb
+*.rpm
+*.appimage
+*.msi
+*.exe
+*.dmg
 
 # Compiled source #
 ###################
