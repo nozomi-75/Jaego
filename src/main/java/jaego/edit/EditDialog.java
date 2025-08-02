@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -80,8 +81,13 @@ public class EditDialog extends JDialog {
         }, btnSize);
 
         JButton deleteBtn = ButtonFactory.createSizedColoredButton("Delete", () -> {
-            controller.markDeleteRequested();
-            dispose();
+            int result = JOptionPane.showConfirmDialog(
+                this, "Are you sure you want to delete this item?"
+            );
+            if (result == JOptionPane.YES_OPTION) {
+                controller.markDeleteRequested();
+                dispose();
+            }
         }, btnSize, new Color(165, 29, 45), Color.WHITE);
 
         JButton cancelBtn = ButtonFactory.createSizedButton("Cancel", () -> dispose(), btnSize);
