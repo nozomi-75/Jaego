@@ -1,5 +1,6 @@
 package jaego.list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jaego.edit.EditDialog;
@@ -24,6 +25,7 @@ public class ListController {
 
     private final EntryModel model;
     private final ListView view;
+    private List<SampleItem> displayedItems = new ArrayList<>();
 
     public ListController(EntryModel model, ListView view) {
         this.model = model;
@@ -56,7 +58,8 @@ public class ListController {
                 default: return 0;
             }
         });
-    
+        
+        displayedItems = items;
         view.updateTable(items);
     }
 
@@ -64,7 +67,7 @@ public class ListController {
         List<SampleItem> items = model.getItems();
         if (rowIndex < 0 || rowIndex >= items.size()) return;   
 
-        SampleItem selectedItem = items.get(rowIndex);  
+        SampleItem selectedItem = displayedItems.get(rowIndex);  
 
         EditDialog dialog = new EditDialog(null, selectedItem);
         dialog.setVisible(true);    
