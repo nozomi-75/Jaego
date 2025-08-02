@@ -84,10 +84,10 @@ public class ListView extends JPanel {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
-                    int selectedRow = table.getSelectedRow();
+                int row = table.rowAtPoint(e.getPoint());
+                if (e.getClickCount() == 2 && row != -1) {
                     if (editListener != null) {
-                        editListener.editRequested(selectedRow);
+                        editListener.editRequested(row);
                     }
                 }
             }
