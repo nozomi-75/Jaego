@@ -23,7 +23,15 @@ public class DatabaseManager {
                 name TEXT NOT NULL,
                 price REAL NOT NULL CHECK (price >= 0),
                 quantity INTEGER NOT NULL CHECK (quantity >= 0),
-                category TEXT NOT NULL
+                category TEXT NOT NULL CHECK (category IN (
+                    'Stationery',
+                    'Electronics',
+                    'Office Supplies',
+                    'Furniture',
+                    'Cleaning Supplies',
+                    'IT Equipment',
+                    'Other'
+                ))
             );
         """;
         

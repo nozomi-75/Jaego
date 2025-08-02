@@ -75,7 +75,7 @@ public class EntryController {
             onSaveListener.accept(item);
         }
 
-        DialogUtils.showInfo("Product saved successfully.", "Action successful");
+        // DialogUtils.showInfo("Product saved successfully.", "Action successful");
         view.clearFields();
     }
     

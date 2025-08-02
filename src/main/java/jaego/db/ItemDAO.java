@@ -90,6 +90,18 @@ public class ItemDAO {
         }
     }
 
+    /**
+     * Searches for products in the database whose names or categories match the given query.
+     * <p><strong>The search is case-insensitive.</strong></p>
+     *
+     * @param query The search query string. The query is treated as a substring,
+     *              so the method will find products whose names or categories
+     *              contain the query string.
+     * @return A list of {@link SampleItem} objects that match the search query.
+     *         Returns an empty list if no products match the query or if an
+     *         SQLException occurs.
+     * @throws SQLException if a database error occurs during the search.
+     */
     public List<SampleItem> searchProducts(String query) throws SQLException {
         List<SampleItem> results = new ArrayList<>();
         String sql = "SELECT * FROM items WHERE LOWER(name) LIKE ? OR LOWER(category) LIKE ?";
